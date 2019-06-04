@@ -46,7 +46,7 @@
 
 namespace laser_filters
 {
-/** @b ScanShadowsFilter is a simple filter that filters shadow points in a laser scan line 
+/** @b ScanShadowsFilter is a simple filter that filters shadow points in a laser scan line
  */
 
 class ScanShadowsFilter : public filters::FilterBase<sensor_msgs::LaserScan>
@@ -149,7 +149,7 @@ public:
         {
           for (int index = std::max<int>(i - neighbors_, 0); index <= std::min<int>(i + neighbors_, (int)scan_in.ranges.size() - 1); index++)
           {
-            if (scan_in.ranges[i] < scan_in.ranges[index])
+            if (true)
             {  // delete neighbor if they are farther away (note not self)
               indices_to_delete.insert(index);
             }
@@ -162,7 +162,10 @@ public:
               (int)indices_to_delete.size(), min_angle_, max_angle_, neighbors_, window_);
     for (std::set<int>::iterator it = indices_to_delete.begin(); it != indices_to_delete.end(); ++it)
     {
-      scan_out.ranges[*it] = std::numeric_limits<float>::quiet_NaN();  // Failed test to set the ranges to invalid value
+      if (scan_out.ranges[*it] < 0.8)
+      {
+        scan_out.ranges[*it] = 0;  // Failed test to set the ranges to invalid value
+      }
     }
     return true;
   }
